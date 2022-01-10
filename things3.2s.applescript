@@ -106,6 +106,30 @@ on getTodoByName(name, listName)
   return todo
 end getTodoByName
 
+on getAreas()
+  set areaList to {}
+
+  tell application "Things3"
+    repeat with areaArea in areas
+      copy area to the end of areaList
+    end repeat
+  end tell
+
+  return areaList
+end getAreas
+
+get getAreaProjects(areaName)
+  set projectList to {}
+
+  tell application "Things3"
+    -- repeat with projProj in projects of areaName
+    --   copy projProj to the end of projectList
+    -- end repeat
+  end tell
+
+  return projectList
+end getAreaProjects
+
 on getTodos(listName)
   set nowTodoName to ""
 
@@ -242,6 +266,11 @@ on run argv
       return
     end if
     if item 1 of argv is "new-todo"
+      set todoArea to item 2 of argv
+      if todoArea is equal to "Today"
+        set todoList to "Today"
+        set todoArea to null
+      end if
       tell application "Things3"
         show quick entry panel
       end tell
@@ -373,6 +402,19 @@ on run argv
     set logs to logs & "---" & "\n"
 
     set logs to logs & "New Todo | shell='" & arg0 & "' param1=new-todo terminal=false refresh=true" & "\n"
+    set areaList to getAreas()
+    repeat with areaArea in areaList
+      -- set areaName to areaArea
+      -- -- set logs to logs & "-- " & areaName & " | shell='" & arg0 & "' param1=new-todo param2=Area param3=" & area & " param4=Today terminal=false refresh=true" & "\n"
+      -- -- set projectList = getAreaProjects(areaName)
+      -- -- log projectList
+      -- tell "Things3"
+      -- repeat with project in projects of area areaName
+      --   set logs to logs & "-- -- " & areaName & " | shell='" & arg0 & "' param1=new-todo param2=Area param3=" & area & " param4=Today terminal=false refresh=true" & "\n"
+      -- end repeat
+      -- end tell
+    end repeat
+    set logs to logs & "-- Inbox | shell='" & arg0 & "' param1=new-todo param2=Inbox terminal=false refresh=true" & "\n"
     set logs to logs & "Open Things | shell='" & arg0 & "' param1=launch terminal=false"
   end if
 
